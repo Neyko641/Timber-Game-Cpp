@@ -40,9 +40,9 @@ int main()
     Cloud1.setTexture(textureCloud);
     Cloud2.setTexture(textureCloud);
     Cloud3.setTexture(textureCloud);
-    Cloud1.setPosition(250, 0);
-    Cloud2.setPosition(500, 300);
-    Cloud3.setPosition(1200, 150);
+    Cloud1.setPosition(0, 0);
+    Cloud2.setPosition(0, 150);
+    Cloud3.setPosition(0, 300);
     //Are they on screen?
     bool cloud1Active = false;
     bool cloud2Active = false;
@@ -51,6 +51,9 @@ int main()
     float cloud1Speed = 0.0f;
     float cloud2Speed = 0.0f;
     float cloud3Speed = 0.0f;
+
+    //Variable to control time
+    sf::Clock clock;
     //game loop
     while (window.isOpen())
     {
@@ -58,6 +61,103 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         {
             window.close();  //exit game.
+        }
+        /*
+        ********************************
+            Update the scene
+        ********************************/
+
+        //Measure time
+        sf::Time dt = clock.restart();
+
+        //Speed of the bee.
+        if (!beeActive)
+        {
+            srand((int)time(0) * 10);
+            beeSpeed = (rand() % 200) + 200;
+            //Bee height;
+            float height = (rand() % 500) + 500;
+            spriteBee.setPosition(2000, height);
+            beeActive = true;
+        }
+        else {
+            //Move the bee;
+            spriteBee.setPosition(spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()), 
+                spriteBee.getPosition().y);
+            if (spriteBee.getPosition().x < -100)
+            {
+                beeActive = false;
+            }
+        }
+
+        if (!cloud1Active)
+        {
+            //Cloud speed
+            srand((int)time(0) * 10);
+            cloud1Speed = (rand() % 200);
+
+            //Cloud height
+            srand((int)time(0) * 10);
+            float height = (rand() % 150);
+            Cloud1.setPosition(-200, height);
+            cloud1Active = true;
+        }
+        else
+        {
+            Cloud1.setPosition(Cloud1.getPosition().x 
+             + (cloud1Speed * dt.asSeconds()), 
+                Cloud1.getPosition().y);
+            if (Cloud1.getPosition().x > 1920)
+            {
+                cloud1Active = false;
+            }
+
+        }
+        if (!cloud2Active)
+        {
+            //Cloud speed
+            srand((int)time(0) * 20);
+            cloud2Speed = (rand() % 200);
+
+            //Cloud height
+            srand((int)time(0) * 20);
+            float height = (rand() % 300) - 150;
+            Cloud2.setPosition(-200, height);
+            cloud2Active = true;
+        }
+        else
+        {
+            Cloud2.setPosition(Cloud2.getPosition().x
+                + (cloud2Speed * dt.asSeconds()),
+                Cloud2.getPosition().y);
+            if (Cloud2.getPosition().x > 1920)
+            {
+                cloud2Active = false;
+            }
+
+        }
+        if (!cloud3Active)
+        {
+            //Cloud speed
+            srand((int)time(0) * 30);
+            cloud3Speed = (rand() % 200);
+
+            //Cloud height
+            srand((int)time(0) * 30);
+            float height = (rand() % 450) - 150;
+            Cloud3.setPosition(-200, height);
+            cloud3Active = true;
+        }
+        else
+        {
+            Cloud3.setPosition(Cloud3.getPosition().x
+                + (cloud3Speed * dt.asSeconds()),
+                Cloud3.getPosition().y);
+            if (Cloud3.getPosition().x > 1920)
+            {
+                cloud3Active = false;
+            }
+
         }
         //clear screen from last frame.
         window.clear();
