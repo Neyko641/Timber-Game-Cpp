@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-
+#include <sstream>
 int main()
 {
     //create screen object
@@ -13,7 +13,32 @@ int main()
     sf::Sprite spriteBackground; // create a sprite
     spriteBackground.setTexture(textureBackground); //Attach a texture to the sprite
     spriteBackground.setPosition(0, 0); // set the position of the background.
+    //Draw the text
+    int score = 0;
+    sf::Font font;
+    sf::Text scoreText;
+    sf::Text pauseText;
+    //load font
+    font.loadFromFile("fonts/KOMIKAP_.ttf");
+    //Make a message by creating a text file and loading font.
+    pauseText.setFont(font);
+    pauseText.setCharacterSize(60);
+    pauseText.setFillColor(sf::Color::White);
+    pauseText.setString("Press Enter to Start!");
+    //Score message
+    scoreText.setFont(font);
+    scoreText.setString("Score = 0 ");
+    scoreText.setCharacterSize(50);
+    scoreText.setFillColor(sf::Color::White);
 
+    //Position the text
+    sf::FloatRect textRect = pauseText.getLocalBounds();
+    pauseText.setOrigin(textRect.left + 
+        textRect.width / 2.0f,
+        textRect.top + 
+        textRect.height / 2.0f);
+    pauseText.setPosition(1920 / 2.0f, 1080 / 2.0f);
+    scoreText.setPosition(20, 20);
     // Make a tree sprite
     sf::Texture textureTree;
     textureTree.loadFromFile("graphics/tree.png");
@@ -165,6 +190,9 @@ int main()
                 }
 
             }
+            std::stringstream ss;
+            ss << "Score = " << score;
+            scoreText.setString(ss.str());
         } // end if  not paused
             //clear screen from last frame.
             window.clear();
@@ -175,6 +203,11 @@ int main()
             window.draw(Cloud3);
             window.draw(spriteTree);
             window.draw(spriteBee);
+            window.draw(scoreText);
+            if (gamePaused)
+            {
+                window.draw(pauseText);
+            }
             //display drawn scene.
             window.display();
         
