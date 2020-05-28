@@ -80,6 +80,17 @@ int main()
 
     //Variable to control time
     sf::Clock clock;
+    //Time bar
+    sf::RectangleShape timeBar;
+    float timeBarStartWidth = 400;
+    float timeBarHeight = 80;
+    timeBar.setSize(sf::Vector2f(timeBarStartWidth, timeBarHeight));
+    timeBar.setFillColor(sf::Color::Red);
+    timeBar.setPosition((1920 / 2) - timeBarStartWidth / 2, 980);
+    sf::Time gameTimeTotal;
+    float timeRemaining = 6.0f;
+    float timeBarWidthPerSecond = timeBarStartWidth / timeRemaining;
+   
     //game loop
     while (window.isOpen())
     {
@@ -91,6 +102,9 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
         {
             gamePaused = false;
+            //Reset the time and the score
+            score = 0;
+            timeRemaining = 5;
         }
         /*
         ********************************
@@ -100,7 +114,24 @@ int main()
         {
             //Measure time
             sf::Time dt = clock.restart();
+            
+            //Substract from the amount of time remaining.
+            timeRemaining -= dt.asSeconds();
+            //give the timebar a size
+            timeBar.setSize(sf::Vector2f(timeBarWidthPerSecond * 
+                timeRemaining,timeBarHeight));
+            if (timeRemaining <= 0.0f)
+            {
+                gamePaused = true;
+                pauseText.setString("Out of time!!");
 
+                sf::FloatRect textRect = pauseText.getLocalBounds();
+                pauseText.setOrigin(textRect.left +
+                    textRect.width / 2.0f,
+                    textRect.top +
+                    textRect.height / 2.0f);
+                pauseText.setPosition(1920 / 2.0f, 1080 / 2.0f);
+            }
             //Speed of the bee.
             if (!beeActive)
             {
@@ -204,6 +235,7 @@ int main()
             window.draw(spriteTree);
             window.draw(spriteBee);
             window.draw(scoreText);
+            window.draw(timeBar);
             if (gamePaused)
             {
                 window.draw(pauseText);
